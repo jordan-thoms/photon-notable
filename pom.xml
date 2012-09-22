@@ -20,6 +20,11 @@
             <email>michaelfairley@gmail.com</email>
             <timezone>-6</timezone>
         </developer>
+        <developer>
+            <name>Jordan Thoms</name>
+            <email>jordan@notable.ac</email>
+            <timezone>-6</timezone>
+        </developer>        
     </developers>
 
     <licenses>
@@ -31,15 +36,15 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/1000Memories/photon-core.git</connection>
-        <developerConnection>scm:git:git@github.com:1000Memories/photon-core.git</developerConnection>
-        <url>http://github.com/1000Memories/photon-core</url>
+        <connection>scm:git:git://github.com/jordan-thoms/photon-notable.git</connection>
+        <developerConnection>scm:git:git@github.com:jordan-thoms/photon-notable.git</developerConnection>
+        <url>http://github.com/jordan-thoms/photon-notable</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>github</system>
-        <url>http://github.com/1000Memories/photon-core/issues</url>
+        <url>http://github.com/jordan-thoms/photon-notable/issues</url>
     </issueManagement>
 
     <distributionManagement>
@@ -171,6 +176,40 @@
                     <preparationGoals>clean test</preparationGoals>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.thousandmemories.photon.notable.PhotonNotableService</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>            
         </plugins>
     </build>
 </project>

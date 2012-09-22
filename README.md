@@ -1,34 +1,25 @@
-photon-core
-===========
+# photon-example
+An example [Dropwizard](http://dropwizard.codahale.com/) app that uses [photon-core](https://github.com/1000Memories/photon-core) to process [Twitter](https://twitter.com/) avatars on the fly.
 
-On the fly photo processing
+----
 
-Photon-core provides a JAX-RS resource (`com.thousandmemories.photon.core.PhotoResource`) that processes (resizes, rotates, and crops) image files on the fly.
+## Example transformations
 
-Read more about why we built it on our blog post (TODO: link blog post after it's live) or see it in use in an example at https://github.com/1000Memories/photon-example
+The original image  
+![Original](https://photon-example.herokuapp.com/michaelfairley)
 
+Resized to a width of 200px (`;w=200` added to the original URL)  
+![200px Wide](https://photon-example.herokuapp.com/michaelfairley;w=200)
 
-## PhotoResource
-`PhotoResource` takes a path like `/1234.jpg;w=200;r=180;c=130,60,200,300`, fetches the image named `1234.jpg` using a `PhotoProvider`, processes the image according the matrix parameters, and spits out the resulting image.
+Rotated 180 degrees (`;r=180` added to the original URL)  
+![Rotated 180 degrees](https://photon-example.herokuapp.com/michaelfairley;r=180)
 
-### Matrix parameters
+A crop of just the face (`;c=130,60,200,200` added to the original URL)  
+![Cropped closer](https://photon-example.herokuapp.com/michaelfairley;c=130,60,200,220)
 
-- `w=200`: Resizes the image to be 200px wide
-- `r=180`: Rotates the image 90 degrees clockwise (`90`, `180`, and `270` are the available rotation angles)
-- `c=130,60,200,300`: Crops the image 130px from the left, 60px from the top, with a width of 200px and a height of 300px.
+Cropped to the face, rotated, then resized  
+![Resized, cropped, and rotated](https://photon-example.herokuapp.com/michaelfairley;c=130,60,200,220;r=180;w=100)
 
+----
 
-## PhotoProvider
-
-`PhotoResource`'s contructor takes an instance of `PhotoProvider`, which is responsible for finding the image based on the name it's given and returning an `InputStream` that will yield its contents.
-This will most often mean looking up a file in a blob store (e.g. S3 or a file system).
-
-An example that fetches the the avatar for the named Twitter user:
-```java
-public class TwitterPhotoProvider implements PhotoProvider {
-    @Override
-    public InputStream getPhotoInputStream(String path) throws IOException {
-        return new URL("https://api.twitter.com/1/users/profile_image?size=original&screen_name=" + path).openStream();
-    }
-}
-```
+Try it out on your own avatar: https://photon-example.herokuapp.com/{your-twitter-user-name}
