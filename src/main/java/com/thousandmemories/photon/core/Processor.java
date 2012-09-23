@@ -30,7 +30,7 @@ public class Processor {
     public static BufferedImage fitToWidth(BufferedImage image, int width) throws Exception {
         // TODO: Don't ever make an image bigger
         TimerContext resizeContext = resizeTimer.time();
-        BufferedImage result = AsyncScalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, width).get();
+        BufferedImage result = AsyncScalr.resize(image, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, width).get();
         image.flush();
         resizeContext.stop();
         return result;
