@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 
-@Path("/{name}")
+@Path("/images/{id}/original/{name}")
 public class PhotoResource {
     private static final Log LOG = Log.forClass(PhotoResource.class);
     private static final Timer readTimer = Metrics.newTimer(PhotoResource.class, "read", TimeUnit.MILLISECONDS, TimeUnit.SECONDS);
@@ -39,14 +39,20 @@ public class PhotoResource {
     @Timed
     @CacheControl(immutable = true)
     public Response getPhoto(@PathParam("name") String name,
+                               @PathParam("id") Integer id,
                              @MatrixParam("w") Integer width,
                              @MatrixParam("r") RotationParam rotateAngle,
                              @MatrixParam("c") RectangleParam crop) throws Exception {
         InputStream resultStream;
-
+        LOG.warn("---REQEUST " + name);
+        
+        if (name.contains("favicon.ico")) {
+            throw new WebApplicationException(404); // Not implemented
+        }
+                
         InputStream imageStream;
         try {
-            imageStream = new BufferedInputStream(photoProvider.getPhotoInputStream(name));
+            imageStream = new BufferedInputStream(photoProvider.getPhotoInputStream("images/" + id + "/original/" + name));
         } catch (FileNotFoundException fnfe) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -55,6 +61,8 @@ public class PhotoResource {
         if (mimeType == null) {
             throw new WebApplicationException(501); // Not implemented
         }
+
+
 
         if (width != null || rotateAngle != null || crop != null) {
             BufferedImage image;

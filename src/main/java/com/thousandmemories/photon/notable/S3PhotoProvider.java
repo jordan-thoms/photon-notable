@@ -1,4 +1,4 @@
-package com.thousandmemories.photon.example;
+package com.thousandmemories.photon.notable;
 
 import com.thousandmemories.photon.core.PhotoProvider;
 
