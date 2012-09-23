@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +54,7 @@ public class PhotoResource {
         InputStream imageStream;
         try {
             imageStream = new BufferedInputStream(photoProvider.getPhotoInputStream("images/" + id + "/original/" + name));
-        } catch (FileNotFoundException fnfe) {
+        } catch (IOException fnfe) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 

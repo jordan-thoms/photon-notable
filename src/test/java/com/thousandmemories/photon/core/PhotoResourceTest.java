@@ -45,26 +45,25 @@ public class PhotoResourceTest extends ResourceTest {
 
     @Test
     public void testNoModifications() throws Exception {
-        when(photoProvider.getPhotoInputStream("mf.jpg")).thenReturn(getImage("mf.jpg"));
+        when(photoProvider.getPhotoInputStream("images/1/original/mf.jpg")).thenReturn(getImage("mf.jpg"));
 
-        ClientResponse response = client().resource("/mf.jpg").get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/mf.jpg").get(ClientResponse.class);
         assertThat(response.getEntity(byte[].class), is(ByteStreams.toByteArray(getImage("mf.jpg"))));
         assertThat(response.getType().toString(), is("image/jpeg"));
     }
-
     @Test
     public void test404() throws Exception {
-        when(photoProvider.getPhotoInputStream("doesntexist.jpg")).thenThrow(new FileNotFoundException());
+        when(photoProvider.getPhotoInputStream("images/1/original/doesntexist.jpg")).thenThrow(new FileNotFoundException());
 
-        ClientResponse response = client().resource("/doesntexist.jpg").get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/doesntexist.jpg").get(ClientResponse.class);
         assertThat(response.getStatus(), is(404));
     }
 
     @Test
     public void testFitWidth() throws Exception {
-        when(photoProvider.getPhotoInputStream("mf.jpg")).thenReturn(getImage("mf.jpg"));
+        when(photoProvider.getPhotoInputStream("images/1/original/mf.jpg")).thenReturn(getImage("mf.jpg"));
 
-        ClientResponse response = client().resource("/mf.jpg;w=200").get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/mf.jpg;w=200").get(ClientResponse.class);
         assertThat(response.getType().toString(), is("image/jpeg"));
         BufferedImage result = ImageIO.read(response.getEntity(InputStream.class));
         assertThat(result.getWidth(), is(200));
@@ -76,9 +75,9 @@ public class PhotoResourceTest extends ResourceTest {
         int initialHeight = initialImage.getHeight();
         int initialWidth = initialImage.getWidth();
 
-        when(photoProvider.getPhotoInputStream("mf.jpg")).thenReturn(getImage("mf.jpg"));
+        when(photoProvider.getPhotoInputStream("images/1/original/mf.jpg")).thenReturn(getImage("mf.jpg"));
 
-        ClientResponse response = client().resource("/mf.jpg;r=90").get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/mf.jpg;r=90").get(ClientResponse.class);
         assertThat(response.getType().toString(), is("image/jpeg"));
         BufferedImage result = ImageIO.read(response.getEntity(InputStream.class));
         assertThat(result.getWidth(), is(initialHeight));
@@ -92,9 +91,9 @@ public class PhotoResourceTest extends ResourceTest {
         int w = 20;
         int h = 200;
 
-        when(photoProvider.getPhotoInputStream("mf.jpg")).thenReturn(getImage("mf.jpg"));
+        when(photoProvider.getPhotoInputStream("images/1/original/mf.jpg")).thenReturn(getImage("mf.jpg"));
 
-        ClientResponse response = client().resource("/mf.jpg;c=" + x + "," + y + "," + w + "," + h).get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/mf.jpg;c=" + x + "," + y + "," + w + "," + h).get(ClientResponse.class);
         assertThat(response.getType().toString(), is("image/jpeg"));
         BufferedImage result = ImageIO.read(response.getEntity(InputStream.class));
         assertThat(result.getWidth(), is(w));
@@ -103,9 +102,9 @@ public class PhotoResourceTest extends ResourceTest {
 
     @Test
     public void testPNG() throws Exception {
-        when(photoProvider.getPhotoInputStream("liz.png")).thenReturn(getImage("liz.png"));
+        when(photoProvider.getPhotoInputStream("images/1/original/liz.png")).thenReturn(getImage("liz.png"));
 
-        ClientResponse response = client().resource("/liz.png;w=200").get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/liz.png;w=200").get(ClientResponse.class);
         assertThat(response.getType().toString(), is("image/png"));
         BufferedImage result = ImageIO.read(response.getEntity(InputStream.class));
         assertThat(result.getWidth(), is(200));
@@ -113,10 +112,9 @@ public class PhotoResourceTest extends ResourceTest {
 
     @Test
     public void testUnsupportedType() throws Exception {
-        when(photoProvider.getPhotoInputStream("fake.tiff")).thenReturn(new ByteArrayInputStream(new byte[]{1, 2, 3}));
+        when(photoProvider.getPhotoInputStream("images/1/original/fake.tiff")).thenReturn(new ByteArrayInputStream(new byte[]{1, 2, 3}));
 
-        ClientResponse response = client().resource("/fake.tiff;w=200").get(ClientResponse.class);
+        ClientResponse response = client().resource("/images/1/original/fake.tiff;w=200").get(ClientResponse.class);
         assertThat(response.getStatus(), is(501));
     }
-
 }
